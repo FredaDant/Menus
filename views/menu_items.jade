@@ -1,0 +1,14 @@
+extends layout
+
+block content
+    h2= title
+    -var wtf = dataset.length
+    -var n = 0
+    h1= message
+    ul
+        while n < wtf
+            li= dataset[n++].Display
+    a(href='http://localhost:3030/index') Input Menu Items
+        
+
+           

@@ -1,0 +1,9 @@
+body  
+ h1 Create a menu item for a day
+
+form(action="/update", method="post")  
+  input(type="date",id="menu_date", name="menuDate")
+  p
+  input(type="text", name="theItem", size="50", maxlength="50")
+  p
+  input(type="submit", value="Add To Menu")
