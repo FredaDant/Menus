@@ -73,9 +73,9 @@ function getMenuList( req, res, next) {
     var Connection = require('tedious').Connection;
     var Request = require('tedious').Request;
     var config = {
-        userName: 'sqlreports',
-        password: 'sqlreports',
-        server: 'sbhg-emrreports',
+        userName: ********,
+        password: *********,
+        server: ********,
     
     // If you're on Windows Azure, you will need this:
         options: {encrypt: true}
@@ -175,9 +175,9 @@ var description = req.body.theItem;
 var Connection = require('tedious').Connection;
 
   var config = {
-    userName: 'sqlreports',
-    password: 'sqlreports',
-    server: 'sbhg-emrreports',
+    userName: *************,
+    password: **************,
+    server: ******,
     
 
     options: {encrypt: true}
