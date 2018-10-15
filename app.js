@@ -7,7 +7,8 @@ app.use(bodyParser.json());
 var tedious = require('tedious');
 var Promise = require('promise');
 app.use(bodyParser.urlencoded({ extended: false }));
-var path = require('path');  
+var path = require('path');
+var fs = require('fs');  
 
 
 
@@ -72,21 +73,14 @@ function getMenuList( req, res, next) {
 			
     var Connection = require('tedious').Connection;
     var Request = require('tedious').Request;
-    var config = {
-        userName: ********,
-        password: *********,
-        server: ********,
+   
     
-    // If you're on Windows Azure, you will need this:
-        options: {encrypt: true}
-    };
-    
+    var config = JSON.parse(fs.readFileSync('./config/config.json', 'utf8'));
 
-    
 
     var connection = new Connection(config);
     
-    
+
 
     connection.on('connect', function (err) {
     	    if (err) {
@@ -174,14 +168,9 @@ var description = req.body.theItem;
     
 var Connection = require('tedious').Connection;
 
-  var config = {
-    userName: *************,
-    password: **************,
-    server: ******,
-    
+var config = JSON.parse(fs.readFileSync('./config/config.json', 'utf8'));
 
-    options: {encrypt: true}
-  };
+ var connection = new Connection(config);
 
   var connection = new Connection(config);
 
