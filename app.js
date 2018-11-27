@@ -16,21 +16,27 @@ var router = express.Router();
 var menu_data = [];	
 var menu = [];
 
-app.engine('pug', require('pug').__express);
+//app.engine('pug', require('pug').__express);
 app.set('views', path.join(__dirname, 'views'));  
-app.set('view engine', 'pug');
+//app.set('view engine', 'pug');
+
 
 app.use(router);  
 app.use(express.static(path.join(__dirname, 'public')));
+//app.use(express.static(path.join(__dirname,'views')));
 
 
 
 
 
+router.get('/', function(req, res){
+  //res.render('index')
+  res.sendfile('./views/index.html');
+
+});
 
 
-
-router.get('/', getMenuList, function (req, res, next) {
+router.get('/showlist', getMenuList, function (req, res, next) {
 
   
      var item = [];
@@ -117,29 +123,36 @@ router.get('/', getMenuList, function (req, res, next) {
    res.sendfile('./views/message.html');
 });
 
-router.get('/index', function(req, res) {
-    res.render('index')
+router.get('/addDateToShop', function(req, res) {
+    
+    res.sendfile('./views/addDateToShop.html');
 });
 
-router.post('/update',submitMenuItem, function (req, res) {  
+router.post('/addshoppingDate',addMenuDate, function (req, res) {
+     
 	  var menu_data = req.body.menuDate;
-      var description = req.body.theItem;
+    
       
 	  
-    res.render('update', {
-        title: 'All Quiet on the Western Front',
-        menuDate: menu_data,
-        MenuItem: description 
+   /* res.render('update', {
+        title: 'All is well that ends well or so they say',
+        menuDate: menu_data  */
+
+        res.sendfile('./views/createweeklyMenu.html');
       
           
-	});
+//	});
+   });
 
-});
+//});
 
 
  // end of submitMenuItem
 
+router.post('/createMenu', function(req, resp){
+  console.log(req.body);
 
+});
 function getMenuList( req, res, next) {
 	var promise = new Promise(function(fulfill, reject){
 	
@@ -256,14 +269,14 @@ function getMenuList( req, res, next) {
 function submitMenuItem( req, res, next) {
     
 
-var menu_date = req.body.menuDate;
-var description = req.body.theItem;
+  var menu_date = req.body.menuDate;
+  var description = req.body.theItem;
     
-var Connection = require('tedious').Connection;
+  var Connection = require('tedious').Connection;
 
-var config = JSON.parse(fs.readFileSync('./config/config.json', 'utf8'));
+  var config = JSON.parse(fs.readFileSync('./config/config.json', 'utf8'));
 
- var connection = new Connection(config);
+  var connection = new Connection(config);
 
   var connection = new Connection(config);
 
@@ -316,11 +329,78 @@ var config = JSON.parse(fs.readFileSync('./config/config.json', 'utf8'));
 } // end of submitMenuItem
 
 
+function addMenuDate( req, res, next) {
+    
+  
+  var menu_date = req.body.menuDate;
+  var description = req.body.theItem;
+    
+  var Connection = require('tedious').Connection;
+
+  var config = JSON.parse(fs.readFileSync('./config/config.json', 'utf8'));
+
+  var connection = new Connection(config);
+
+  var connection = new Connection(config);
+
+  connection.on('connect', function(err) {
+
+      executeStatement();
+    });
+
+    
+    
+ 
+
+  function executeStatement() {
+    var sql = "insert LA_County.dbo.shopping_date (shopping_date) values ('" + menu_date +  "')"
+    
+    var Request = require('tedious').Request;
+    // should catch error read this http://tediousjs.github.io/tedious/api-request.html
+    request = new Request(sql, function(err, rowCount) {
+      if (err) {
+        console.log('reject');
+        reject(err);
+      } else {
+        console.log('else');
+        if(rowCount < 1) {
+            callback (null, false);
+      }
+      else {
+          fulfill(menu_date);
+        }
+      }
+    });
+  
+
+    request.on('row', function(columns) {
+      columns.forEach(function(column) {
+        //console.log(column.value);
+      });
+    });
+    
+    request.on('doneProc', function (rowCount, more, returnStatus, rows) {
+        
+        next(null, rows);
+            
+            connection.close()
+              
+        
+
+         });  
+    
+    
+
+    connection.execSql(request);
+  }    
+
+} 
 
 
 
 
 
 
-app.listen(3030);  
+
+app.listen(3000);  
 module.exports = app;  
