@@ -3,9 +3,10 @@
     <head>
             <link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
     </head>
-    <body>
+    <body id="body">
         
         <div id="menuItemsParent" ></div>
+            <input id="hidden" name="firstname" type="hidden"  value="">
             <p id = "dateOfMenu">Click button to add menu Item for Friday&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<button id="MondayButton" onclick="myFunction('end_dateOfMenu')">Add Item</button></p>
             <p id = "end_dateOfMenu"> </p>
 
@@ -34,7 +35,8 @@
 
             <p id = "Thursday">Click button to add menu Item for Thursday&nbsp&nbsp&nbsp&nbsp&nbsp<button id="ThursdayButton" onclick="myFunction('end_thursday')">Add Item</button></p>
             <p id = "end_thursday"> </p>
-        </div>    
+        <div> </div>
+        
         <form id="menuform" >
            <input type = "button" value="Create Menu">
         </form>
@@ -48,8 +50,12 @@
 
         <script>
         var idIncrement = 1;
-        var theParent = document.getElementById("menuItemsParent");
-        theParent.addEventListener("click", showalert);
+        var charsTyped = [];
+        var id_target = document.getElementById("body");
+        var id_save = id_target.getAttribute("id") ;
+        var oldElement  =  document.getElementById("hidden");
+        //document.addEventListener('keydown',checkKeyPressed, false);
+        document.getElementById('body').addEventListener('keypress',checkKeyPressed, false);
         /* Function to create input areas on the form when button clicked */
         function myFunction(elemnt_id) {
             var i;
@@ -59,29 +65,55 @@
             document.body.insertBefore(paragraph, dateOfMenu);
             var x = document.createElement("INPUT");
             x.setAttribute("type", "text");
-            x.setAttribute("value", "");
+            //x.setAttribute("value", "");
             x.setAttribute("id", elemnt_id + "_" + idIncrement);
             idIncrement+=1;
             document.body.insertBefore(x, dateOfMenu);
-        //document.body.append(x);
-        //x.()
-    }
-    /*function submitForm() {
-        document.getElementById("menuform").submit();
-    }*/
-    function showalert(e) {
-       // if (e.target !== e.currentTarget)
-       // {
-           console.log(e);
-            var clickedElement  = e.target.id;
-            alert("Howdee "  + clickeElement);
-           
-       // }
-       // e.stopPropogation;
-        //alert("Hello! I am an alert box!");
-        //console.log("Hi");
-        //console.log(document.body);
-    }
+        }
+        function checkKeyPressed(e) {
+            // save event so it does not go out of scope this may not be necessary due to 
+            // ham fisted coding so far
+            var myEvent = e;
+            //console.log(id_save);
+            //console.log(myEvent.target.getAttribute("id"));
+            if (id_save == "body") {
+                id_save = myEvent.target.getAttribute("id");
+                //console.log(id_save);
+            }
+
+            // this is about bubbling ??
+            if (myEvent.target !== myEvent.currentTarget){
+                //console.log(myEvent.currentTarget.getAttribute("id"));
+                //console.log("next is target");
+                //console.log(myEvent.target.getAttribute("id"));
+
+                    
+                if(id_save !==  myEvent.target.getAttribute("id") ) {
+                        // should be here if focus moves from text box to another
+                    console.log("Should get here if text box changes")
+                    document.getElementById(id_save).setAttribute("value", charsTyped);
+                    charsTyped = [];
+
+                     
+
+
+                }
+                    var charCode = typeof myEvent.which == "number" ? myEvent.which : myEvent.keyCode;
+
+
+                    console.log(String.fromCharCode(charCode));
+                    if (charCode) {
+                        charsTyped.push(String.fromCharCode(charCode));
+                        console.log(charsTyped);
+
+                    }
+                }
+            }
+
+
+
+
+
 
     </script>
 </html>
